@@ -28,3 +28,10 @@ FH_nqd <- with(data[!is.na(data$FL),], tapply(seedlings, fullname, function(x){l
 dtable <- data.frame(sp, minLM, ABN, AB, pF, nqd, msed, FH_nqd, FH_msed)
 
 write.table(dtable, file = "./data/table_of_species_information.txt")
+
+
+head(dtable)
+
+
+
+length(which(dtable$ABN < 160))
