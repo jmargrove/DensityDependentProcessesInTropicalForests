@@ -21,17 +21,19 @@ finaldata <- spdata[0,]
 
 ##### the function to calculate the force of flowering :) using gravetry function 
 for(species in levels(spdata$sp)){
-  
-  dt_species <- subset(spdata, sp == species) #
-  
+  # Select a dataframe with only conspecific individuals 
+  dt_species <- subset(spdata, sp == species)
+  # Assign species with NA DBH the species mean 
   dt_species$DBH[which(is.na(dt_species$DBH))] <- mean(dt_species$DBH, na.rm = T)
   
-  if(dim(dt_species)[1] == 1){Sum_FF <- 0}else{ ### incase there is only one speceis the force value will equal 0!
-    
+  if(dim(dt_species)[1] == 1){
+    Sum_FF <- 0 ### incase there is only one speceis the force value will equal 0!
+    }else{ 
     mat_size <- dim(dt_species)[1]
     dist_matrix <- matrix(rep(NA, mat_size*mat_size), nrow = mat_size)
     
     coords <- as.matrix(dt_species[,c(23,24)])
+    
     for(j in 1:mat_size){
       sp1 <- coords[j,c(1,2)]
       for(i in 1:mat_size){
@@ -50,7 +52,7 @@ for(species in levels(spdata$sp)){
     for(j in 1:mat_size){
       indv_dist_vec <- dist_matrix[,j] # distance col 
       for(i in 1:mat_size){
-        F_matrix[i,j] <-   tree_size[j] * tree_size[i] *1/indv_dist_vec[i]^2}} # Force matrix ... 
+        F_matrix[i,j] <-    1/indv_dist_vec[i]^2}} # Force matrix ... 
     
     rownames(F_matrix) <- dt_species[1:mat_size,1]
     colnames(F_matrix) <- dt_species[1:mat_size,1]
@@ -77,4 +79,8 @@ for(species in levels(spdata$sp)){
 dim(finaldata)
 head(finaldata)
 
-write.table(finaldata, file = "Gravity intensity1.txt")
+
+result_data$Sum_FF3 <- finaldata$Sum_FF
+head(result_data)
+
+write.table(result_data, file = "./data/calc_data.txt")
